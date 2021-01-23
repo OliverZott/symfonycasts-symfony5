@@ -36,7 +36,9 @@ class QuestionController extends AbstractController
             'Detailed answer to question 4'
         ];
 
-        $detailedAnswers = array_map(null,$answers,$questionDetail);
+        $detailedAnswers = array_combine($answers, $questionDetail);
+
+        dump($detailedAnswers, $this);
 
         return $this->render(
             'question/show.html.twig',

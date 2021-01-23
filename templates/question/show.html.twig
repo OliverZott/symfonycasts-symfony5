@@ -19,11 +19,11 @@
         {% endfor %}
     </ul>
 
-    <h3>More detailed Answers ({{ answers|length }}:)</h3>
+    <h3>More detailed Answers:</h3>
     <ul>
-        {% for index, answer in answers %}
+        {% for key, answer in detailedAnswers %}
             <li>
-                {{ index }}: {{ answer }}
+                {{ key }}: {{ answer }}
             </li>
         {% endfor %}
     </ul>
