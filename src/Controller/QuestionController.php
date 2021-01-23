@@ -4,10 +4,11 @@
 namespace App\Controller;
 
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class QuestionController
+class QuestionController extends AbstractController
 {
 
     /**
@@ -26,8 +27,24 @@ class QuestionController
      */
     public function show(string $input): Response
     {
-        return new Response(sprintf(
-            'Here is question: "%s".', ucwords(str_replace("-", " ", $input))
-        ));
+        $answers = ['First Answer', 'Second Answer', 'Third Answer', 'Fourth Answer'];
+
+        $questionDetail = [
+            'Detailed answer to question 1',
+            'Detailed answer to question 2',
+            'Detailed answer to question 3',
+            'Detailed answer to question 4'
+        ];
+
+        $detailedAnswers = array_map(null,$answers,$questionDetail);
+
+        return $this->render(
+            'question/show.html.twig',
+            [
+                'question' => ucwords(str_replace('-', ' ', $input)),
+                'answers' => $answers,
+                'detailedAnswers' => $detailedAnswers,
+            ],
+        );
     }
 }
