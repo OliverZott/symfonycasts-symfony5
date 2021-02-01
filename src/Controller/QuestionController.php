@@ -13,7 +13,7 @@ class QuestionController extends AbstractController
 
     /**
      * @return Response
-     * @Route("/")
+     * @Route("/", name="app_homepage")
      */
     public function homepage(): Response
     {
