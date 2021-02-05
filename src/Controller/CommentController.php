@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,18 +19,21 @@ class CommentController extends AbstractController
 {
 
     /**
-     * @Route("/comments/{id}/vote/{direction}")
+     * @Route("/comments/{id<\d+>}/vote/{direction<up|down>}", methods={"POST", "GET"})
      * @param string $id
      * @param string $direction
+     * @param LoggerInterface $logger
      * @return Response
      */
-    public function commentVote(string $id, string $direction): Response
+    public function commentVote(string $id, string $direction, LoggerInterface $logger): Response
     {
         // todo: use id for db query
 
         if ($direction === 'up') {
+            $logger->info('Voting up!');
             $currentVoteCount = rand(7, 100);
         } else {
+            $logger->info('Voting down!');
             $currentVoteCount = rand(0, 5);
         }
 
