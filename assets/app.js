@@ -11,6 +11,9 @@ import './styles/app.css';
 // start the Stimulus application
 import './bootstrap';
 
+// importing jquery, since its no linked anymore but installed by yarn (yarn add jquery --dev)
+import $ from 'jquery';
+
 
 /**
  * Simple (ugly) code to handle the comment vote up/down
@@ -27,7 +30,7 @@ $container.find('a').on('click', function (e) {
     var $link = $(e.currentTarget);
 
     console.log("Well fuck me, inside function");
-    console.log( $link.data('direction'));
+    console.log($link.data('direction'));
 
     $.ajax({
         url: '/comments/10/vote/' + $link.data('direction'),
