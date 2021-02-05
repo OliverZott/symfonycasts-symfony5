@@ -10,3 +10,29 @@ import './styles/app.css';
 
 // start the Stimulus application
 import './bootstrap';
+
+
+/**
+ * Simple (ugly) code to handle the comment vote up/down
+ */
+var $container = $(".js-vote-arrows"); //['prevObject'][0];
+console.log("First call of jquery-js file");
+console.log("This is the container" + $container);
+
+$container.find('a').on('click', function (e) {
+
+    console.log("This is a function parameter: " + e);
+
+    e.preventDefault();
+    var $link = $(e.currentTarget);
+
+    console.log("Well fuck me, inside function");
+    console.log( $link.data('direction'));
+
+    $.ajax({
+        url: '/comments/10/vote/' + $link.data('direction'),
+        method: 'POST'
+    }).then(function (response) {
+        $container.find(".js-vote-total").text(response.vote);
+    });
+});

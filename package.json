@@ -1,4 +1,4 @@
-{Installing encore "composer require encore"
+{
     "devDependencies": {
         "@symfony/stimulus-bridge": "^2.0.0",
         "@symfony/webpack-encore": "^1.0.0",
