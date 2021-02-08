@@ -7,6 +7,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class QuestionController extends AbstractController
 {
@@ -22,10 +23,12 @@ class QuestionController extends AbstractController
 
     /**
      * @param string $input
+     * @param CacheInterface $cache
      * @return Response
+     * @throws \Psr\Cache\InvalidArgumentException
      * @Route("/questions/{input}")
      */
-    public function show(string $input): Response
+    public function show(string $input, CacheInterface $cache): Response
     {
         $answers = ['First Answer', 'Second Answer', 'Third Answer', 'Fourth Answer'];
 
@@ -36,6 +39,21 @@ class QuestionController extends AbstractController
             'Detailed answer to question 4'
         ];
 
+        $questionText = "I've been turned into a cat, any thoughts on how to turn back? While I'm adorable, I don't really care for cat food.";
+        $parsedQuestionText = $cache->get(
+            'markdown_' . md5($questionText),
+            function () use ($questionText) {
+                return 'PARSED: ' . $questionText;
+            }
+        );
+
+
+        $questionText2 = 'I\'ve been turned into a cat, any thoughts on how to turn back? While I\'m **adorable**, I don\'t really care for cat food.';
+        $parsedQuestionText2 = $cache->get('markdown_'.md5($questionText), function() use ($questionText) {
+            return strtoupper($questionText);
+        });
+
+
         $detailedAnswers = array_combine($answers, $questionDetail);
 
         dump($detailedAnswers, $this);
@@ -44,6 +62,7 @@ class QuestionController extends AbstractController
             'question/show.html.twig',
             [
                 'question' => ucwords(str_replace('-', ' ', $input)),
+                'questionText' => $parsedQuestionText2,
                 'answers' => $answers,
                 'detailedAnswers' => $detailedAnswers,
             ],
