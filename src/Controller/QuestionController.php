@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,7 +26,7 @@ class QuestionController extends AbstractController
      * @param string $input
      * @param CacheInterface $cache
      * @return Response
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @Route("/questions/{input}")
      */
     public function show(string $input, CacheInterface $cache): Response
@@ -48,15 +49,20 @@ class QuestionController extends AbstractController
         );
 
 
-        $questionText2 = 'I\'ve been turned into a cat, any thoughts on how to turn back? While I\'m **adorable**, I don\'t really care for cat food.';
-        $parsedQuestionText2 = $cache->get('markdown_'.md5($questionText), function() use ($questionText) {
-            return strtoupper($questionText);
-        });
+        $questionText2 = 'Blub, I\'ve been turned into a cat, any thoughts on how to turn back? While I\'m **adorable**, I don\'t really care for cat food.';
+        $parsedQuestionText2 = $cache->get(
+            'markdown_' . md5($questionText),
+            function () use ($questionText) {
+                return strtoupper($questionText);
+            }
+        );
+
+
+        // check in cross-hair in debug toolbar (cache.adapter from dev/prod env)
+        // dump($cache);
 
 
         $detailedAnswers = array_combine($answers, $questionDetail);
-
-        dump($detailedAnswers, $this);
 
         return $this->render(
             'question/show.html.twig',
